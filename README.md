@@ -36,7 +36,7 @@ By default, redis launches on `127.0.0.1:6379`
 
 You can test run the image server with the following
 ```
-foo_cover_upload --serve --host "image.your.domain/upload" --redis-host "127.0.0.1:6379"
+foo_cover_upload --serve --host "image.your.domain" --redis-host "127.0.0.1:6379"
 ```
 The image server should now be active on `127.0.0.1:2131`. Visiting the index page in a browser will show you a help page on how to configure your client.
 
