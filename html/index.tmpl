@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>foo_cover_upload</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+        body {
+            background-color: #313338;
+            margin: 0;
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: .4rem;
+            color: #ddd;
+            font-family: Outfit;
+        }
+
+        code {
+            padding: .4rem;
+            line-height: 1.2rem;
+            background: #313338;
+            border-radius: 8px;
+        }
+
+        br {
+            margin-bottom: 1rem;
+        }
+
+        a {
+            color: #008cff;
+            text-decoration: none;
+        }
+
+        #instructions, #command-gen {
+            display: flex;
+            max-width: 1000px;
+            margin: 2rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            background-color: #2b2d31;
+            padding: 1rem;
+            border-radius: 12px;
+            flex: 1 1 0px;
+            min-width: 300px;
+        }
+
+        .step__title {
+            font-size: 1.2rem;
+        }
+
+        .step__image {
+            max-width: 40%;
+            float: left;
+            margin-right: 1rem;
+        }
+
+        #command-gen div {
+            flex: 1 1 0px;
+        }
+
+        .generator-input {
+            display: flex;
+            flex-direction: column;
+            gap: .4rem;
+        }
+
+        input {
+            background-color: #2b2d31;
+            border: 0;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            padding: .4rem;
+            color: #fff;
+            min-width: 20rem;
+        }
+
+        input::placeholder {
+            color: #aaa;
+        }
+
+        input:focus {
+            outline-width: 0;
+            outline: none;
+        }
+
+        .result-cmd {
+            background-color: #2b2d31;
+            padding: .2rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            let command
+
+            const inputPath = document.querySelector('#gen-path')
+            const inputURL = document.querySelector('#gen-url')
+            const inputPass = document.querySelector('#gen-pass')
+
+            const result = document.querySelector('.result-cmd')
+
+            const generateCommand = () => {
+                if (!inputPath.value) command = `"${inputPath.getAttribute("placeholder")}"`
+                else command = `"${inputPath.value}"`
+                
+                if (!inputURL.value) command += ` -url "${inputURL.getAttribute("placeholder")}"`
+                else command += ` -url "${inputURL.value}"`
+
+                if (inputPass.value) command += ` -auth "${inputPass.value}"`
+
+                result.innerHTML = command
+            }
+
+            for (elem of [inputPath, inputURL, inputPass]) {
+                elem.addEventListener("input", () => {
+                    generateCommand()
+                })
+            }
+
+            result.addEventListener('click', () => {
+                navigator.clipboard.writeText(command)
+            })
+
+            generateCommand()
+        })
+    </script>
+</head>
+<body>
+    <h1>foo_cover_upload</h1>
+    <h2>Dead simple, memory based image server for foobar2000 cover images.</h2>
+    <span>To use this image server. You must configure your foobar2000 player.</span>
+    <section id="instructions">
+        <div class="step">
+            <span class="step__title">Step 1</span>
+            <br/>
+            <span class="step__content">Download the foo_discord_rich plugin for foobar2000, specifically <a href="https://github.com/s0hv/foo_discord_rich/releases">this fork</a>. Install the plugin.</span>
+        </div>
+        <div class="step">
+            <span class="step__title">Step 2</span>
+            <br/>
+            <span class="step__content">Download the foo_cover_upload executable, which can be found <a href="https://github.com/0x1f610/foo_cover_upload/releases">here</a>. 
+            <br/>
+            Put the executable in a directory where it won't be moved. You can also move it to your fb2k user folder, which is <code>%appdata%\foobar2000</code> or <code>%appdata%\foobar2000-v2</code> for v2.0 or newer.</span>
+        </div>
+        <div class="step">
+            <img class="step__image" src="/static/preference.png"/>
+            <span class="step__title">Step 3</span>
+            <br/>
+            <span class="step__content">
+                Open up foobar2000. Go to Prefrences -> Tools -> Discord Rich Presence Integration -> Advanced
+                <br/>
+                Put the path to the foo_cover_upload executable in the box as shown, followed by the necessary arguments.
+                <br/>
+                You can generate the command below.
+            </span>
+        </div>
+    </section>
+    <section id="command-gen">
+        <div class="generator-input">
+            <label for="path">Executable Path</label>
+            <input id="gen-path" name="path" placeholder="C:/path/to/your/directory/foo_cover_upload.exe" />
+            <label for="upload-url">Upload URL</label>
+            <input id="gen-url" name="upload-url" placeholder="{{ .host }}/upload" />
+            <label for="password">Password (if any)</label>
+            <input id="gen-pass" name="password" />
+        </div>
+        <div class="generator-result">
+            Here is your command (click to copy):
+            <br/>
+            <div class="result-cmd"></div>
+        </div>
+    </section>
+    <section id="credits">
+        Made by Binary (0x1f610) • <a href="https://github.com/0x1f610/foo_cover_upload">Source code on GitHub</a>
+    </section>
+</body>
+</html>
